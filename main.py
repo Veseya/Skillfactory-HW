@@ -16,7 +16,7 @@ def ask(token):
     while True:
         answer = int(input("Выбирает ячейку " + token + ": "))
         if 1 <= answer <= 9:
-            if str(field[answer-1]) not in "ХО":
+            if str(field[answer-1]) not in "XO":
                 field[answer-1] = token
             else:
                 print("Клетка занята")
