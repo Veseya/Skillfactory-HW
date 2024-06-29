@@ -1,0 +1,46 @@
+{% extends 'bootstrap/index.html' %}
+
+{% block title %}
+Board
+{% endblock title %}
+
+{% block content %}
+    <h1 class="space-h">Все объявления ({{ paginator.count }})</h1>
+
+    {% if postlist %}
+        {% for post in postlist %}
+            <div class="space-12">
+                <a href="{% url 'post_detail' post.id %}"><h6>{{ post.title }}</h6></a>
+                <a href="{% url 'post_category' post.category.id %}"> #{{ post.category }}</a><br>
+                by <i>{{ post.author }}</i><br>
+                {{ post.pub_date|date:'d F, Y' }}<br>
+                {{ post.text|truncatewords:20|safe }}<br>
+                <a href="{% url 'response_create' post.id %}">Отклик</a>
+                <a href="{% url 'post_update' post.id %}">Редактировать</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h4>Здесь скоро появятся новые сообщения </h4>
+    {% endif %}
+
+    {% if is_paginated %}
+        <!-- first page -->
+        {% if page_obj.has_previous and page_obj.number > 2 %}
+            <a href="?page=1&{{ params }}"><<<</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a>{{ num }}</a>
+            {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}&{{ params }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        <!-- last page -->
+        {% if page_obj.has_next and page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+            <a href="?page={{ page_obj.paginator.num_pages }}&{{ params }}">>>></a>
+        {% endif %}
+    {% endif %}
+
+{% endblock content %}

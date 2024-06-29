@@ -1,0 +1,41 @@
+{% extends 'board/index.html' %}
+
+{% block title %}
+Board
+{% endblock title %}
+
+{% block content %}
+    <h1 class="space-h">Все объявления в #{{ category }} ({{ paginator.count }})</h1>
+    {% if post_category %}
+        {% for post in post_category %}
+            <div class="space-12">
+                <a href="{% url 'post_detail' post.id %}"><h6>{{ post.title }}</h6></a>
+                by <i>{{ post.user }}</i><br>
+                {{ post.pub_date|date:'d F, Y' }}<br>
+                {{ post.text|truncatewords:20|safe }}<br>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h4>Объявлений нет</h4>
+    {% endif %}
+
+    {% if is_paginated %}
+        <!-- first page -->
+        {% if page_obj.has_previous and page_obj.number > 2 %}
+            <a href="?page=1&{{ params }}"><<<</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a>{{ num }}</a>
+            {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}&{{ params }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        <!-- last page -->
+        {% if page_obj.has_next and page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+            <a href="?page={{ page_obj.paginator.num_pages }}&{{ params }}">>>></a>
+        {% endif %}
+    {% endif %}
+{% endblock content %}

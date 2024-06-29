@@ -1,0 +1,31 @@
+{% extends 'board/index.html' %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+    <div class="space-10">
+        <h2>{{ post.title }}</h2>
+    </div>
+    <div class="space-10">
+        by <i>{{ post.user }}</i><br>
+        {{ post.pub_date|date:'d F, Y' }}<br>
+        {{ post.text|safe }}<br>
+        <a href="{% url 'response_create' post.id %}">Отклик</a>
+        <a href="{% url 'post_update' post.id %}">Редактировать</a>
+    </div>
+
+    <!-- block of post comments -->
+    {% for response in response_set %}
+        <div class="space-10">
+            by <i>{{ response.user }}</i><br>
+            {{ response.pub_date|date:'d F G:i:s, Y' }}<br>
+            {{ response.text }}<br>
+        </div>
+    {% endfor %}
+
+    <div class="text-center space-10">
+        <input type="button" value="Main page" onclick="location.href='/board/'">
+    </div>
+{% endblock content %}
